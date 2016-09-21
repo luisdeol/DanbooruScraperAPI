@@ -39,6 +39,8 @@ def downloadImagesUrl(request):
     count = 0
     url = str(request.GET.get('url'))
     # url = url.replace("section=", "section=0")
+    if not os.path.exists("images"):
+        os.makedirs("images")
     html = urllib.request.urlopen(url).read()
     sopa = BeautifulSoup(html, "html.parser")
     for img in sopa.find_all("img", class_ =""):
@@ -49,8 +51,10 @@ def downloadImagesUrl(request):
         try:
             count = count + 1
             image_url = img['src']
-            urllib.request.urlretrieve(image_url, str(count) + ".jpg")
+            image_name = str.split(image_url, '/')
+            print(image_name[-1])
+            urllib.request.urlretrieve(image_url, "C:/Users/luisdeolpy/Documents/GitHub/DanbooruScraperAPI/images/" + image_name[-1])
             urls.append(img['src'])
         except:
             pass
-    return Response(url)
+    return Response(urls)
